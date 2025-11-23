@@ -1,0 +1,23 @@
+install laravel:
+composer create-project laravel/laravel lr_konsumsipdam
+
+# supaya bisa dijalankan di localhost:
+1. salin semua file pada folder public/* ke folder utama
+2. edit file index.php -> hilangkan /../
+
+jika masih error:
+sudo chmod -R 777 storage
+sudo chmod -R 777 bootstrap/cache
+php artisan view:clear
+php artisan config:clear
+
+# link storage ke public
+php artisan storage:link
+
+# buat seeder:
+php artisan make:seeder PermissionSeeder
+php artisan make:seeder RoleSeeder
+php artisan make:seeder UserSeeder
+
+# jalankan seeder:
+php artisan migrate:fresh --seed
