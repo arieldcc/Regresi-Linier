@@ -72,6 +72,7 @@
 
             <div class="text-center mt-3">
                 {{-- <a href="{{ route('register.form') }}">Don't have an account? Register</a> --}}
+                <a href="{{ route('dashboard') }}">Kembali ke dashboard!</a>
             </div>
 
         </div>

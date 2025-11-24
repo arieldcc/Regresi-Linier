@@ -1,14 +1,23 @@
 {{-- resources/layouts/admin/partials/navbar.blade.php --}}
+@php
+    use App\Models\Role;
+
+    if (Auth::check()) {
+        $permissions = Auth::user()->role?->permissions->sortByDesc('urut') ?? collect();
+        $roleName = Auth::user()->role?->name;
+    } else {
+        $guestRole = Role::where('name', 'guest')->with('permissions')->first();
+        $permissions = $guestRole?->permissions->sortByDesc('urut') ?? collect();
+        $roleName = $guestRole?->name ?? 'guest';
+    }
+@endphp
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        {{-- <a class="navbar-brand" href="#">Admin Panel</a> --}}
-        @php
-            $permissions = Auth::user()?->role?->permissions->sortByDesc('urut') ?? [];
-        @endphp
-        @auth
+        <a class="navbar-brand" href="/">{{ ucfirst($roleName) }}</a>
+        {{-- @auth
             <a class="navbar-brand" href="dashboard"><span class="navbar-brand disabled">Role: {{ Auth::user()->role->name }}</span></a>
-        @endauth
+        @endauth --}}
         <ul class="navbar-nav ms-auto">
         @foreach ($permissions as $permission)
             <li class="nav-item">
@@ -18,6 +27,11 @@
                 </a>
             </li>
         @endforeach
+        @if(!Auth::check())
+            <li class="nav-item">
+                <a href="{{ route('login.form') }}" class="btn btn-outline-light">Login</a>
+            </li>
+        @else
             <li class="nav-item">
                 <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -25,11 +39,7 @@
                     Logout
                 </a>
             </li>
-
-            {{-- <a class="nav-link"
-                href="{{ route('dataset.index') }}">
-                    Dataset
-                </a> --}}
+        @endif
         </ul>
         </div>
     </div>

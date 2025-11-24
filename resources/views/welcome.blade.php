@@ -6,19 +6,18 @@
 @include('layouts.admin.partials.header')
 
 <main class="content-wrapper container">
-  <h1>Dashboard {{ Auth::user()->role->name }}</h1>
+  <h1>Dashboard {{ ucfirst($roleName) }}</h1>
   <p>Selamat datang di panel administrasi PDAM.</p>
-    @php
-$pages = \App\Models\Page::whereHas('roles', function ($q) {
-    $q->where('roles.id', auth()->user()->role_id);
-})->get();
-@endphp
 
-    @foreach($pages as $page)
-        <div class="card my-3">
-            <div class="card-header">{{ $page->title }}</div>
-            <div class="card-body">{!! nl2br(e($page->content)) !!}</div>
-        </div>
-    @endforeach
+  @forelse($pages as $page)
+      <div class="card my-3">
+          <div class="card-header">{{ $page->title }}</div>
+          <div class="card-body">{!! nl2br(e($page->content)) !!}</div>
+      </div>
+  @empty
+      <div class="alert alert-info mt-3">
+          Tidak ada halaman yang tersedia untuk role ini.
+      </div>
+  @endforelse
 </main>
 @endsection
